@@ -62,20 +62,22 @@ public class DiscogsService {
             List<SearchResponse.Result> currentResults,
             ResultHandler<List<SearchResponse.Result>> handler
     ) {
-        request.withPage(page).subscribe(response -> {
-            int perPage = response.getPagination().getPer_page();
-            List<SearchResponse.Result> combinedResults = Stream.concat(
-                    currentResults.stream(),
-                    response.getResults()
-                            .stream()
-                            .limit(countRemaining))
-                    .collect(toList());
-            if (countRemaining <= perPage || page >= response.getPagination().getPages()) {
-                handler.completed(combinedResults);
-            } else {
-                paginatedRequest(request, countRemaining - perPage, page + 1, combinedResults, handler);
-            }
-        });
+        request.withPage(page)
+                .doOnError(handler::failed)
+                .subscribe(response -> {
+                    int perPage = response.getPagination().getPer_page();
+                    List<SearchResponse.Result> combinedResults = Stream.concat(
+                                    currentResults.stream(),
+                                    response.getResults()
+                                            .stream()
+                                            .limit(countRemaining))
+                            .collect(toList());
+                    if (countRemaining <= perPage || page >= response.getPagination().getPages()) {
+                        handler.completed(combinedResults);
+                    } else {
+                        paginatedRequest(request, countRemaining - perPage, page + 1, combinedResults, handler);
+                    }
+                });
     }
 
     @Value
@@ -88,8 +90,7 @@ public class DiscogsService {
                     .get()
                     .uri("database/search?q={query}&type={type}&page={page}", query, type, page)
                     .retrieve()
-                    .bodyToMono(SearchResponse.class)
-                    .doOnError(Throwable::printStackTrace);
+                    .bodyToMono(SearchResponse.class);
         }
     }
 }

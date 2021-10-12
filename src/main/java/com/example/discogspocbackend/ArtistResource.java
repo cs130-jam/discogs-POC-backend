@@ -28,10 +28,10 @@ public class ArtistResource {
                 return discogsService.artistSearch(artist, count).get();
             }
         } catch (InterruptedException e) {
-            log.error("Future interrupted for artist search {}, error: {}", artist, e);
+            log.error("Future interrupted for artist search {}, error: {}", artist, e.toString());
             throw new SearchException();
         } catch (ExecutionException e) {
-            log.error("Future execution failed for artist search {}, error: {}", artist, e);
+            log.error("Future execution failed for artist search {}, error: {}", artist, e.toString());
             throw new SearchException();
         }
     }
