@@ -42,12 +42,13 @@ public class SearchResponse {
 
     @Value
     public static class ArtistView {
+        String id;
         String name;
         String thumb;
         String url;
 
         public static ArtistView ofResult(Result result) {
-            return new ArtistView(result.title, result.thumb, result.resource_url);
+            return new ArtistView(result.getId(), result.getTitle(), result.getThumb(), result.getResource_url());
         }
     }
 }
