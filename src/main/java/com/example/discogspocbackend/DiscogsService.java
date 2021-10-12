@@ -64,6 +64,7 @@ public class DiscogsService {
     ) {
         request.withPage(page)
                 .doOnError(handler::failed)
+                .onErrorResume(error -> Mono.empty())
                 .subscribe(response -> {
                     int perPage = response.getPagination().getPer_page();
                     List<SearchResponse.Result> combinedResults = Stream.concat(
@@ -88,7 +89,7 @@ public class DiscogsService {
         public Mono<SearchResponse> withPage(int page) {
             return webClientProvider.get()
                     .get()
-                    .uri("database/search?q={query}&type={type}&page={page}", query, type, page)
+                    .uri("databasse/search?q={query}&type={type}&page={page}", query, type, page)
                     .retrieve()
                     .bodyToMono(SearchResponse.class);
         }
