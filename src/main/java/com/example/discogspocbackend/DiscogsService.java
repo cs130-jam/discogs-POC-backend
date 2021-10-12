@@ -74,7 +74,7 @@ public class DiscogsService {
         public Mono<SearchResponse> withPage(int page) {
             return webClientProvider.get()
                     .get()
-                    .uri("database/search?q={artist}&type={type}&page={page}", query, type, page)
+                    .uri("database/search?q={query}&type={type}&page={page}", query, type, page)
                     .retrieve()
                     .bodyToMono(SearchResponse.class)
                     .doOnError(Throwable::printStackTrace);
