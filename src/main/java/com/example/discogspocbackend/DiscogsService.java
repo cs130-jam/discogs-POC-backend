@@ -7,6 +7,7 @@ import com.example.discogspocbackend.responses.SearchResponse;
 import com.example.discogspocbackend.responses.SearchResponse.ArtistView;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -89,7 +90,12 @@ public class DiscogsService {
         public Mono<SearchResponse> withPage(int page) {
             return webClientProvider.get()
                     .get()
-                    .uri("database/search?q={query}&type={type}&page={page}", query, type, page)
+                    .uri(UriComponentsBuilder.fromUriString("database/search")
+                            .queryParam("q", query)
+                            .queryParam("type", type)
+                            .queryParam("page", page)
+                            .build()
+                            .toUriString())
                     .retrieve()
                     .bodyToMono(SearchResponse.class);
         }
