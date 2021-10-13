@@ -9,13 +9,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 
+import javax.net.ssl.SSLException;
+
 @Import({
         ArtistResource.class
 })
 public class DiscogsPocContext {
 
     @Bean
-    @SneakyThrows
+    @SneakyThrows(SSLException.class)
     public SslContext sslContext() {
         return SslContextBuilder.forClient().build();
     }
